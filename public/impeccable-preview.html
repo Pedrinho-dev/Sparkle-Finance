@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Prévia visual — Sparkle Finance</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Avenir Next", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+        --ink: #29252a;
+        --muted: #6d656a;
+        --line: #e8dfe1;
+        --paper: #fffdfa;
+        --page: #edf1f3;
+        --pink: #b71f63;
+        --green: #557866;
+        --cream: #f0e7d9;
+      }
+
+      * { box-sizing: border-box; }
+      html { min-width: 320px; scroll-behavior: smooth; }
+      body { margin: 0; color: var(--ink); background: var(--page); }
+      button, a { font: inherit; }
+      a { color: inherit; }
+      :focus-visible { outline: 3px solid #3c80c6; outline-offset: 3px; }
+
+      .preview-header {
+        display: grid;
+        gap: 1.5rem;
+        width: min(100% - 2rem, 1240px);
+        margin: 0 auto;
+        padding: 2rem 0 1.25rem;
+      }
+
+      .preview-brand { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+      .preview-brand img { width: min(240px, 60vw); height: auto; }
+      .preview-status { border: 1px solid #d9cdd1; border-radius: 999px; padding: .45rem .7rem; color: #655a61; background: rgba(255,255,255,.72); font-size: .78rem; font-weight: 700; }
+      .preview-header h1 { max-width: 760px; margin: 0; font-size: clamp(1.75rem, 4vw, 3.5rem); line-height: 1.02; letter-spacing: -.035em; }
+      .preview-header p { max-width: 680px; margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.55; }
+      .preview-nav { display: flex; flex-wrap: wrap; gap: .5rem; }
+      .preview-nav a { border: 1px solid #d9cdd1; border-radius: 999px; padding: .55rem .75rem; color: #594e54; background: #fffdfb; text-decoration: none; font-size: .78rem; font-weight: 700; }
+      .preview-nav a:hover { border-color: var(--pink); color: var(--pink); }
+
+      .options { display: grid; gap: 2.5rem; width: min(100% - 2rem, 1240px); margin: 0 auto; padding: 1rem 0 4rem; }
+      .direction { display: grid; gap: 1rem; scroll-margin-top: 1rem; }
+      .direction-intro { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 1rem; }
+      .direction-kicker { margin: 0 0 .35rem; color: var(--pink); font-size: .78rem; font-weight: 800; letter-spacing: .04em; }
+      .direction h2 { margin: 0; font-size: clamp(1.35rem, 2.6vw, 2.1rem); letter-spacing: -.035em; }
+      .direction-copy { max-width: 760px; margin: .45rem 0 0; color: var(--muted); line-height: 1.5; }
+      .direction-keep { max-width: 330px; margin: 0; padding: .7rem .85rem; border-left: 2px solid var(--pink); color: #594e54; background: rgba(255,255,255,.52); font-size: .78rem; line-height: 1.45; }
+      .direction-keep strong { display: block; margin-bottom: .2rem; color: var(--ink); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+
+      .screen-frame { overflow: hidden; border: 1px solid rgba(52, 43, 48, .16); }
+      .screen { position: relative; min-height: 520px; padding: 1rem; }
+      .screen button { cursor: default; }
+      .screen-logo { display: block; width: 134px; height: 30px; object-fit: contain; object-position: left center; }
+      .screen-topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 48px; }
+      .screen-topbar small { font-size: .78rem; font-weight: 700; }
+      .screen-topbar .mini-actions { display: flex; align-items: center; gap: .45rem; }
+      .mini-control { border: 1px solid currentColor; border-radius: 999px; padding: .4rem .6rem; background: transparent; font-size: .78rem; font-weight: 700; }
+      .mini-mark { width: 1.4rem; height: 1.4rem; object-fit: contain; }
+      .screen-content { display: grid; gap: .8rem; max-width: 980px; margin: 0 auto; }
+      .screen-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
+      .screen-heading h3 { margin: 0; font-size: clamp(1.35rem, 3vw, 2.15rem); letter-spacing: -.035em; }
+      .screen-heading p { margin: .2rem 0 0; font-size: .82rem; }
+      .screen-action { border: 0; border-radius: 999px; padding: .65rem .85rem; color: #fff; font-size: .72rem; font-weight: 800; }
+      .balance-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, .62fr); align-items: stretch; gap: 1rem; min-height: 156px; padding: 1.1rem; }
+      .balance-panel span { display: block; font-size: .78rem; font-weight: 700; }
+      .balance-panel strong { display: block; margin-top: .3rem; font-size: clamp(1.65rem, 4vw, 2.75rem); line-height: 1; letter-spacing: -.04em; }
+      .balance-panel p { max-width: 33ch; margin: .65rem 0 0; font-size: .82rem; line-height: 1.4; }
+      .balance-image { overflow: hidden; min-height: 134px; }
+      .balance-image img { display: block; width: 100%; height: 100%; min-height: 134px; object-fit: cover; object-position: center; }
+      .screen-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: .8rem; }
+      .panel { padding: .95rem; }
+      .panel h4 { margin: 0; font-size: .8rem; }
+      .panel > p { margin: .25rem 0 .7rem; font-size: .82rem; line-height: 1.4; }
+      .budget-row { display: grid; gap: .45rem; padding: .7rem 0; }
+      .budget-row + .budget-row { border-top: 1px solid var(--line); }
+      .budget-name { display: flex; justify-content: space-between; gap: .75rem; font-size: .82rem; font-weight: 800; }
+      .budget-name span { color: var(--muted); font-weight: 600; }
+      .budget-track { position: relative; height: 7px; overflow: visible; border-radius: 999px; background: #e9e2df; }
+      .budget-fill { height: 100%; border-radius: inherit; }
+      .budget-leaf { position: absolute; top: 50%; width: 11px; height: 11px; border-radius: 80% 20% 80% 20%; transform: translate(-50%, -50%) rotate(35deg); }
+      .ledger { display: grid; gap: .55rem; }
+      .ledger-line { display: grid; grid-template-columns: 1fr auto; gap: .7rem; padding: .55rem 0; font-size: .82rem; }
+      .ledger-line + .ledger-line { border-top: 1px solid var(--line); }
+      .ledger-line span { display: block; margin-top: .14rem; color: var(--muted); font-size: .75rem; }
+      .ledger-line strong { text-align: right; }
+      .screen-nav { display: flex; align-items: center; justify-content: space-around; gap: .3rem; margin-top: .8rem; padding: .55rem .4rem; }
+      .screen-nav span { display: grid; justify-items: center; gap: .15rem; min-width: 54px; font-size: .76rem; font-weight: 700; }
+      .nav-dot { width: .7rem; height: .7rem; border: 1.5px solid currentColor; border-radius: 50%; }
+      .screen-nav .active .nav-dot { border: 0; background: currentColor; box-shadow: 0 0 0 4px rgba(219,43,120,.16); }
+
+      /* Direction A — estufa clara */
+      .estufa .screen-frame { background: #e3eadf; }
+      .estufa .screen { color: #27352e; background: #e3eadf; }
+      .estufa .screen-topbar { padding: .25rem .2rem .7rem; }
+      .estufa .screen-logo { filter: saturate(.86); }
+      .estufa .screen-topbar small { color: #3f604d; }
+      .estufa .mini-control { color: #3f604d; }
+      .estufa .balance-panel { border-radius: 18px; background: #fffdf8; box-shadow: 0 10px 22px rgba(53, 75, 59, .09); }
+      .estufa .balance-panel p, .estufa .panel > p { color: #4e6054; }
+      .estufa .screen-action { background: #b72066; }
+      .estufa .panel { border-radius: 16px; background: #fffdf8; box-shadow: 0 10px 22px rgba(53, 75, 59, .07); }
+      .estufa .panel h4 { color: #27352e; }
+      .estufa .budget-fill { background: #72977d; }
+      .estufa .budget-leaf { background: #b72066; }
+      .estufa .budget-row:nth-child(3) .budget-fill { background: #d6a34c; }
+      .estufa .screen-nav { color: #557866; background: #f8f5ed; }
+      .estufa .screen-nav .active { color: #b72066; }
+
+      /* Direction B — sparkle editorial */
+      .sparkle .screen-frame { background: #242225; }
+      .sparkle .screen { color: #f7f2ee; background: #242225; }
+      .sparkle .screen-topbar { padding: .25rem .2rem .7rem; border-bottom: 1px solid #4b464b; }
+      .sparkle .screen-logo { filter: grayscale(1) brightness(0) invert(1); opacity: .9; }
+      .sparkle .screen-topbar small, .sparkle .mini-control { color: #d7cdd2; }
+      .sparkle .mini-control { border-color: #5c555b; }
+      .sparkle .balance-panel { border-radius: 12px; background: #f7f2ee; color: #242225; }
+      .sparkle .balance-panel p, .sparkle .panel > p, .sparkle .screen-heading p { color: #bcb0b5; }
+      .sparkle .balance-panel p { color: #766c70; }
+      .sparkle .screen-action { border-radius: 8px; background: #b82067; }
+      .sparkle .panel { border-top: 1px solid #514b50; background: #2d292e; }
+      .sparkle .panel h4 { color: #fffaf6; }
+      .sparkle .budget-row + .budget-row, .sparkle .ledger-line + .ledger-line { border-color: #514b50; }
+      .sparkle .budget-name span, .sparkle .ledger-line span { color: #bcb0b5; }
+      .sparkle .budget-track { background: #514b50; }
+      .sparkle .budget-fill { background: #b82067; }
+      .sparkle .budget-leaf { display: none; }
+      .sparkle .budget-row:nth-child(3) .budget-fill { background: #e4b66d; }
+      .sparkle .screen-nav { color: #bcb0b5; background: #2d292e; }
+      .sparkle .screen-nav .active { color: #b82067; }
+      .sparkle .sparkle-signature { display: inline-flex; align-items: center; gap: .35rem; color: #b82067; font-size: .78rem; font-weight: 800; }
+      .sparkle .sparkle-signature img { width: .9rem; height: .9rem; }
+
+      /* Direction C — jardim de bolso */
+      .jardim .screen-frame { background: #f5e8eb; }
+      .jardim .screen { color: #3f3038; background: #f5e8eb; padding-bottom: .65rem; }
+      .jardim .screen-topbar { padding: .25rem .2rem .7rem; }
+      .jardim .screen-topbar small { color: #6d4e5b; }
+      .jardim .mini-control { color: #6d4e5b; border-color: #dcbec9; }
+      .jardim .balance-panel { grid-template-columns: 1fr; min-height: 170px; border-radius: 20px; background: #fffaf8; box-shadow: 0 8px 0 rgba(213, 171, 184, .35); }
+      .jardim .balance-image { display: none; }
+      .jardim .balance-panel p, .jardim .panel > p { color: #735b65; }
+      .jardim .screen-action { background: #a72f62; }
+      .jardim .screen-grid { grid-template-columns: 1fr; }
+      .jardim .panel { border-radius: 20px; background: #fffaf8; box-shadow: 0 8px 0 rgba(213, 171, 184, .25); }
+      .jardim .budget-fill { background: #c84278; }
+      .jardim .budget-leaf { background: #739379; }
+      .jardim .budget-row:nth-child(3) .budget-fill { background: #db9b62; }
+      .jardim .screen-nav { color: #8c6c78; background: #fffaf8; border-radius: 20px; }
+      .jardim .screen-nav .active { color: #c84278; }
+      .jardim .jardim-note { padding: .8rem; border-radius: 16px; color: #5d3f4d; background: #f0d4df; font-size: .82rem; line-height: 1.45; }
+
+      /* The mock screens use one working surface, not cards nested inside cards. */
+      .screen .panel { border-radius: 0; background: transparent; box-shadow: none; padding-right: 0; padding-left: 0; }
+
+      .direction-notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .55rem; }
+      .direction-notes p { margin: 0; padding: .75rem .8rem; border: 1px solid #ddd1d4; border-radius: 12px; color: #62575d; background: rgba(255,255,255,.76); font-size: .8rem; line-height: 1.45; }
+      .direction-notes strong { display: block; margin-bottom: .2rem; color: var(--ink); font-size: .74rem; letter-spacing: .05em; text-transform: uppercase; }
+
+      .preview-footer { width: min(100% - 2rem, 1240px); margin: 0 auto; padding: 0 0 4rem; color: #6d656a; font-size: .8rem; line-height: 1.55; }
+      .preview-footer code { color: #4b3f46; }
+
+      @media (max-width: 760px) {
+        .preview-header, .options, .preview-footer { width: min(100% - 1.25rem, 1240px); }
+        .preview-brand { align-items: flex-start; flex-direction: column; }
+        .direction-intro { grid-template-columns: 1fr; }
+        .direction-keep { max-width: none; }
+        .screen-grid, .direction-notes { grid-template-columns: 1fr; }
+        .screen { min-height: 0; }
+        .balance-panel { grid-template-columns: 1fr; }
+        .balance-image { min-height: 95px; max-height: 125px; }
+        .balance-image img { min-height: 95px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="preview-header">
+      <div class="preview-brand">
+        <img src="/branding/sparkle-finance-logo.png" alt="Sparkle Finance" />
+        <span class="preview-status">Prévia visual · não altera o app</span>
+      </div>
+      <div>
+        <h1>Três caminhos para deixar o financeiro mais leve e óbvio.</h1>
+        <p>As telas abaixo são alternativas de direção, não uma implementação oficial. Todas preservam os lírios, destacam Sparkle Finance e mantêm as tarefas principais visíveis para quem está começando.</p>
+      </div>
+      <nav class="preview-nav" aria-label="Escolher uma direção para visualizar">
+        <a href="#estufa">A · Estufa clara</a>
+        <a href="#sparkle">B · Sparkle editorial</a>
+        <a href="#jardim">C · Jardim de bolso</a>
+      </nav>
+    </header>
+
+    <main class="options">
+      <section class="direction estufa" id="estufa" aria-labelledby="estufa-title">
+        <div class="direction-intro">
+          <div>
+            <p class="direction-kicker">Direção A · serena e botânica</p>
+            <h2 id="estufa-title">Estufa clara</h2>
+            <p class="direction-copy">Um chão verde muito claro, como uma estufa iluminada, dá descanso aos olhos. O lírio aparece como imagem real junto do saldo; cada orçamento usa um marcador de folha para mostrar o quanto já foi usado.</p>
+          </div>
+          <p class="direction-keep"><strong>Preserva</strong> Logo protagonista, lírios reais, navegação padrão e uma ação principal por tela.</p>
+        </div>
+        <div class="screen-frame">
+          <div class="screen">
+            <div class="screen-topbar">
+              <img class="screen-logo" src="/branding/sparkle-finance-logo.png" alt="Sparkle Finance" />
+              <div class="mini-actions"><small>Março 2026</small><button class="mini-control" type="button">Claro</button></div>
+            </div>
+            <div class="screen-content">
+              <div class="screen-heading"><div><h3>Seu mês, com calma.</h3><p>Uma visão simples do que entrou, saiu e ainda está disponível.</p></div><button class="screen-action" type="button">+ Nova despesa</button></div>
+              <div class="balance-panel"><div><span>Saldo disponível</span><strong>R$ 3.240,00</strong><p>Você está dentro do planejado. Registrar agora evita esquecer depois.</p></div><div class="balance-image"><img src="/flowers/lirio%20brancos%203.jpg" alt="Lírios brancos" /></div></div>
+              <div class="screen-grid">
+                <section class="panel"><h4>Meus orçamentos</h4><p>Limites simples para as partes importantes do mês.</p><div class="budget-row"><div class="budget-name">Casa <span>R$ 920 / R$ 1.200</span></div><div class="budget-track"><div class="budget-fill" style="width:77%"></div><i class="budget-leaf" style="left:77%"></i></div></div><div class="budget-row"><div class="budget-name">Mercado <span>R$ 380 / R$ 600</span></div><div class="budget-track"><div class="budget-fill" style="width:63%"></div><i class="budget-leaf" style="left:63%"></i></div></div><div class="budget-row"><div class="budget-name">Lazer <span>R$ 90 / R$ 250</span></div><div class="budget-track"><div class="budget-fill" style="width:36%"></div><i class="budget-leaf" style="left:36%"></i></div></div></section>
+                <section class="panel"><h4>Últimos lançamentos</h4><p>O que você registrou recentemente.</p><div class="ledger"><div class="ledger-line"><div>Supermercado<span>Mercado · hoje</span></div><strong>− R$ 84,20</strong></div><div class="ledger-line"><div>Salário<span>Receita · 05 mar</span></div><strong>+ R$ 4.200</strong></div><div class="ledger-line"><div>Farmácia<span>Casa · 04 mar</span></div><strong>− R$ 42,00</strong></div></div></section>
+              </div>
+              <nav class="screen-nav" aria-label="Navegação de exemplo"><span class="active"><i class="nav-dot"></i>Início</span><span><i class="nav-dot"></i>Planos</span><span><i class="nav-dot"></i>Histórico</span><span><i class="nav-dot"></i>Ajustes</span></nav>
+            </div>
+          </div>
+        </div>
+        <div class="direction-notes"><p><strong>Melhor para</strong>Quem quer sentir tranquilidade e entender o mês sem ler muito.</p><p><strong>Assinatura</strong>Marcador de folha aplicado ao progresso real dos orçamentos.</p><p><strong>Risco honesto</strong>O verde pode ficar delicado demais; o contraste e os estados precisam ser rigorosos.</p></div>
+      </section>
+
+      <section class="direction sparkle" id="sparkle" aria-labelledby="sparkle-title">
+        <div class="direction-intro">
+          <div>
+            <p class="direction-kicker">Direção B · foco e identidade</p>
+            <h2 id="sparkle-title">Sparkle editorial</h2>
+            <p class="direction-copy">O símbolo Sparkle vira o ponto de orientação: uma interface de alto contraste, com fundo grafite, papel claro para os números importantes e rosa apenas no que pode ser acionado. Os lírios entram como imagem pontual, sem enfeitar cada bloco.</p>
+          </div>
+          <p class="direction-keep"><strong>Preserva</strong> Clareza dos dados, texto curto, controles familiares e a força do símbolo.</p>
+        </div>
+        <div class="screen-frame">
+          <div class="screen">
+            <div class="screen-topbar"><div class="mini-actions"><img class="mini-mark" src="/icons/sparkle-mark.svg" alt="" /><small>SPARKLE FINANCE</small></div><div class="mini-actions"><small>MAR 2026</small><button class="mini-control" type="button">Sincronizado</button></div></div>
+            <div class="screen-content">
+              <div class="screen-heading"><div><h3>Março está sob controle.</h3><p>Seu dinheiro em uma leitura rápida.</p><span class="sparkle-signature"><img src="/icons/sparkle-mark.svg" alt="" /> Clareza em primeiro lugar</span></div><button class="screen-action" type="button">Adicionar despesa</button></div>
+              <div class="balance-panel"><div><span>DISPONÍVEL AGORA</span><strong>R$ 3.240,00</strong><p>Receitas R$ 4.200 · Planejado R$ 870 · Despesas R$ 90</p></div><div class="balance-image"><img src="/flowers/lirios%20brancos%202.jpg" alt="Lírios brancos" /></div></div>
+              <div class="screen-grid">
+                <section class="panel"><h4>Planejamento</h4><p>Uma linha por decisão; sem elementos decorativos competindo com os números.</p><div class="budget-row"><div class="budget-name">Casa <span>77% usado</span></div><div class="budget-track"><div class="budget-fill" style="width:77%"></div></div></div><div class="budget-row"><div class="budget-name">Mercado <span>63% usado</span></div><div class="budget-track"><div class="budget-fill" style="width:63%"></div></div></div><div class="budget-row"><div class="budget-name">Lazer <span>36% usado</span></div><div class="budget-track"><div class="budget-fill" style="width:36%"></div></div></div></section>
+                <section class="panel"><h4>Movimentações</h4><p>Dados recentes com estado explícito.</p><div class="ledger"><div class="ledger-line"><div>Supermercado<span>Mercado · hoje</span></div><strong>− R$ 84,20</strong></div><div class="ledger-line"><div>Salário<span>Receita · 05 MAR</span></div><strong>+ R$ 4.200</strong></div><div class="ledger-line"><div>Farmácia<span>Casa · 04 MAR</span></div><strong>− R$ 42,00</strong></div></div></section>
+              </div>
+              <nav class="screen-nav" aria-label="Navegação de exemplo"><span class="active"><i class="nav-dot"></i>Visão geral</span><span><i class="nav-dot"></i>Orçamentos</span><span><i class="nav-dot"></i>Histórico</span><span><i class="nav-dot"></i>Conta</span></nav>
+            </div>
+          </div>
+        </div>
+        <div class="direction-notes"><p><strong>Melhor para</strong>Quem precisa de orientação firme e quer reconhecer a marca em segundos.</p><p><strong>Assinatura</strong>Rosa é reservado para ação, seleção e estado — nunca para enfeite.</p><p><strong>Risco honesto</strong>O grafite pode parecer sério demais para iniciantes; o texto humano precisa aliviar a entrada.</p></div>
+      </section>
+
+      <section class="direction jardim" id="jardim" aria-labelledby="jardim-title">
+        <div class="direction-intro">
+          <div>
+            <p class="direction-kicker">Direção C · acolhedora e prática</p>
+            <h2 id="jardim-title">Jardim de bolso</h2>
+            <p class="direction-copy">Uma tela mais acolhedora, com blocos grandes e uma pergunta por vez. O usuário chega ao saldo, vê a próxima ação e navega pelo polegar. Os lírios ficam como um respiro visual, enquanto a marca se mantém no topo.</p>
+          </div>
+          <p class="direction-keep"><strong>Preserva</strong> Acessibilidade de toque, linguagem simples, navegação inferior e os fluxos atuais.</p>
+        </div>
+        <div class="screen-frame">
+          <div class="screen">
+            <div class="screen-topbar"><img class="screen-logo" src="/branding/sparkle-finance-logo.png" alt="Sparkle Finance" /><div class="mini-actions"><small>Março</small><button class="mini-control" type="button">Ajustes</button></div></div>
+            <div class="screen-content">
+              <div class="screen-heading"><div><h3>O que aconteceu hoje?</h3><p>Comece pelo que você lembra agora.</p></div><button class="screen-action" type="button">+ Registrar</button></div>
+              <div class="balance-panel"><div><span>Você pode gastar</span><strong>R$ 3.240,00</strong><p>Está tudo bem por aqui. Quer registrar uma despesa ou conferir um limite?</p><div class="jardim-note">Próximo passo sugerido: conferir o orçamento de Mercado.</div></div></div>
+              <div class="screen-grid">
+                <section class="panel"><h4>Como está o mês</h4><p>Três limites para você não perder de vista.</p><div class="budget-row"><div class="budget-name">Casa <span>R$ 920 de R$ 1.200</span></div><div class="budget-track"><div class="budget-fill" style="width:77%"></div><i class="budget-leaf" style="left:77%"></i></div></div><div class="budget-row"><div class="budget-name">Mercado <span>R$ 380 de R$ 600</span></div><div class="budget-track"><div class="budget-fill" style="width:63%"></div><i class="budget-leaf" style="left:63%"></i></div></div><div class="budget-row"><div class="budget-name">Lazer <span>R$ 90 de R$ 250</span></div><div class="budget-track"><div class="budget-fill" style="width:36%"></div><i class="budget-leaf" style="left:36%"></i></div></div></section>
+                <section class="panel"><h4>Último registro</h4><p>Você pode editar ou adicionar outro.</p><div class="ledger"><div class="ledger-line"><div>Supermercado<span>Mercado · hoje</span></div><strong>− R$ 84,20</strong></div><div class="ledger-line"><div>Salário<span>Receita · 05 mar</span></div><strong>+ R$ 4.200</strong></div><div class="ledger-line"><div>Farmácia<span>Casa · 04 mar</span></div><strong>− R$ 42,00</strong></div></div></section>
+              </div>
+              <nav class="screen-nav" aria-label="Navegação de exemplo"><span class="active"><i class="nav-dot"></i>Início</span><span><i class="nav-dot"></i>Planejamento</span><span><i class="nav-dot"></i>Histórico</span><span><i class="nav-dot"></i>Ajustes</span></nav>
+            </div>
+          </div>
+        </div>
+        <div class="direction-notes"><p><strong>Melhor para</strong>Quem se sente intimidado por planilhas e precisa de uma próxima ação clara.</p><p><strong>Assinatura</strong>Uma pergunta humana e uma recomendação contextual sem esconder os controles.</p><p><strong>Risco honesto</strong>Blocos grandes ocupam mais espaço; precisamos proteger a leitura de histórico e orçamento.</p></div>
+      </section>
+    </main>
+
+    <footer class="preview-footer">
+      Preview temporário para escolha de direção. Nenhum valor acima é dado real. Quando você escolher A, B ou C, a implementação oficial será feita em `src/` e esta página poderá ser removida.
+    </footer>
+  </body>
+</html>
